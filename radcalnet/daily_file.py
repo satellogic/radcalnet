@@ -6,6 +6,10 @@ However lower-level functions are available for possible reuse in the future.
 import datetime as dt
 
 
+aerosol_types = {'R': '?', 'C': '?', 'D': 'Desert',
+                 'M': 'Marine'}
+
+
 def block_iter(lineiter):
     """
     Iterate over blocks in a file.
@@ -76,14 +80,15 @@ def read_types_line(line_iter):
     head, *vals = next(line_iter)
     assert head == 'Type:', 'Unexpected header, ' + head
     for val in vals:
-        assert val == 'R', 'Unexpected type: ' + val
+        assert val in aerosol_types, 'Unexpected Aerosol type: ' + val
+    return vals
 
 
 def parse_main_data_block(block):
     lineiter = iter(block)
     times = read_times_subblock(lineiter)
     weather = read_weather_subblock(lineiter)
-    read_types_line(lineiter)
+    weather['Type'] = read_types_line(lineiter)
     srf = read_srf_subblock(lineiter)
     return times, weather, srf
 
