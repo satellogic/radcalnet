@@ -42,3 +42,31 @@ def test_basic():
     assert np.all(avg_toa < 1.0)
     # for high enough wavelength, toa is smaller than sr
     assert np.all((avg_toa < avg_sr)[-30:])
+
+def test_ops():
+    pathlist = glob.glob(os.path.join(store_path, 'BTCN', '*'))
+    sm = SiteMeasurements.from_pathlist(pathlist)
+    start_time = dt.datetime(2018, 5, 28, 4, 0)
+    end_time = dt.datetime(2018, 5, 28, 7, 0)
+    # Test slicing
+    sm1 = sm[start_time:]
+    assert len(sm1.weather) == 7
+    assert np.all(sm.weather['T'][start_time:] == sm1.weather['T'])
+    assert np.all(sm.toa[start_time:].loc[:, 500:700] == sm1.toa.loc[:, 500:700])
+
+    sm2 = sm1[end_time + dt.timedelta(seconds=1):]
+    assert len(sm2.weather) == 0
+    sm2 = sm1[:start_time - dt.timedelta(seconds=1)]
+    assert len(sm2.weather) == 0
+    sm2 = sm1[start_time - dt.timedelta(seconds=1):end_time + dt.timedelta(minutes=3)]
+    assert len(sm2.weather) == 7
+
+    # Test merging
+    cut_time = start_time + dt.timedelta(hours=2.1212)
+    sm2 = sm1[:cut_time]
+    sm3 = sm1[cut_time:]
+    assert np.all((sm2 + sm3).weather['WV'].values == sm1.weather['WV'].values)
+    # now with overlap
+    sm2 = sm1[:cut_time + dt.timedelta(hours = 2)]
+    sm3 = sm1[cut_time:]
+    assert np.all((sm2 + sm3).weather['T'].values == sm1.weather['T'].values)

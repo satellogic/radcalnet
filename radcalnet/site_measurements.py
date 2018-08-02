@@ -14,6 +14,8 @@ _table_columns = dict(
 )
 
 
+# TODO: this method sorts the columns as well (by their names)
+# we should prefer to avoid this in case of weather dataframes...
 def _dataframe_merge(df1, df2):
     """
     Merge two dataframes (with same columns) by index.
@@ -113,3 +115,27 @@ class SiteMeasurements:
         return cls(data['weather'], data['weather_errs'],
                    data['sr'], data['sr_errs'], data['toa'], data['toa_errs'],
                    meta)
+
+    def __getitem__(self, key):
+        """
+        Take a time slice out of each of the weather and the data
+        """
+        weather, weather_errs = self.weather.loc[key], self.weather_errs.loc[key]
+        sr, sr_errs = self.sr.loc[key], self.sr_errs.loc[key]
+        toa, toa_errs = self.toa.loc[key], self.toa_errs.loc[key]
+        meta = dict(self.meta)
+        return type(self)(weather, weather_errs, sr, sr_errs, toa, toa_errs, meta)
+
+    def __add__(self, other):
+        """
+        Merge each of the data tables of self & other
+        """
+        assert self.meta == other.meta, 'metadata must match'
+        weather = _dataframe_merge(self.weather, other.weather)
+        weather_errs = _dataframe_merge(self.weather_errs, other.weather_errs)
+        sr = _dataframe_merge(self.sr, other.sr)
+        sr_errs = _dataframe_merge(self.sr_errs, other.sr_errs)
+        toa = _dataframe_merge(self.toa, other.toa)
+        toa_errs = _dataframe_merge(self.toa_errs, other.toa_errs)
+        meta = dict(self.meta)
+        return type(self)(weather, weather_errs, sr, sr_errs, toa, toa_errs, meta)
