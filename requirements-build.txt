@@ -1,3 +1,5 @@
 pycodestyle
 pytest
 pytest-coverage
+docutils
+coverage-badge

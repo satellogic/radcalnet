@@ -14,6 +14,19 @@ script:
     - "pycodestyle"
     - "pytest tests/"
 
+before_deploy:
+    - "rst2html.py README.rst >docs/index.html"
+    - "coverage-badge -f -o docs/coverage.svg"
+
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: docs
+    on:
+        branch: master
+        python: "3.6"
+
 cache:
     apt: true
     pip: true
