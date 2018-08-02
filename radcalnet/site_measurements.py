@@ -18,7 +18,8 @@ def _dataframe_merge(df1, df2):
     """
     Merge two dataframes (with same columns) by index.
     """
-    return df1.merge(df2, how='outer', on=list(df2.columns), left_index=True, right_index=True)
+    return df1.merge(df2, how='outer', on=list(df2.columns),
+                     left_index=True, right_index=True)
 
 
 def _filehandle_key(handle):
@@ -41,7 +42,8 @@ def _process_dailyfile(path, meta=None):
         meta = {'instrument': file_meta['Site']}
     assert file_meta['Site'] == meta['instrument'], 'File metadata not matching expected data'
 
-    coords = tuple(meta.setdefault(key, file_meta[key]) for key in ['Lon', 'Lat', 'Alt'])
+    coords = tuple(meta.setdefault(key, file_meta[key])
+                   for key in ['Lon', 'Lat', 'Alt'])
     assert _meta_coords(file_meta) == coords, 'Site coordinates not matching other files'
 
     weather = pd.DataFrame(weather, index=times)
@@ -60,7 +62,8 @@ def _process_dailyfile(path, meta=None):
 
 
 class SiteMeasurements:
-    def __init__(self, weather, weather_errs, sr, sr_errs, toa, toa_errs, meta):
+    def __init__(self,
+                 weather, weather_errs, sr, sr_errs, toa, toa_errs, meta):
         self.weather, self.weather_errs = weather, weather_errs
         self.sr, self.sr_errs = sr, sr_errs
         self.toa, self.toa_errs = toa, toa_errs
@@ -91,10 +94,11 @@ class SiteMeasurements:
                 continue
 
             handles = list(handles)
-            assert len(handles) in {1,2}, 'Duplicate input files?'
+            assert len(handles) in {1, 2}, 'Duplicate input files?'
 
             for handle in handles:
-                weather, weather_errs, srf, srf_errs, _meta = _process_dailyfile(handle.path, meta)
+                (weather, weather_errs,
+                 srf, srf_errs, _meta) = _process_dailyfile(handle.path, meta)
                 for key in ['weather', 'weather_errs']:
                     data[key] = _dataframe_merge(data[key], locals()[key])
 
