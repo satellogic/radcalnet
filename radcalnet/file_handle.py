@@ -36,7 +36,7 @@ class DailyFileHandle:
     def __init__(self, path):
         self.path = path
         basename = os.path.basename(path)
-        parsed = filename_re.match(basename)
+        parsed = filename_re.match(basename).groupdict()
         self.instrument = parsed['instrument']
         self.site = self.instrument[:4]
         assert self.site in site_info, 'Unrecognized site code: ' + self.site
