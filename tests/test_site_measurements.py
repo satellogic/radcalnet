@@ -53,7 +53,7 @@ def test_ops():
     sm1 = sm[start_time:]
     assert len(sm1.weather) == 7
     assert np.all(sm.weather['T'][start_time:] == sm1.weather['T'])
-    assert np.all(sm.toa[start_time:].loc[:, 500:700] == sm1.toa.loc[:, 500:700])
+    assert np.all(sm.toa[start_time:].loc[:, 500:700].values == sm1.toa.loc[:, 500:700].values)
 
     sm2 = sm1[end_time + dt.timedelta(seconds=1):]
     assert len(sm2.weather) == 0
