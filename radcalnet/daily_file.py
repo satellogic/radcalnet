@@ -30,6 +30,7 @@ def block_iter(lineiter):
 
 def parse_metadata_block(block):
     meta = {key.rstrip(':'): val for key, val in block}
+    meta['Site'] = meta['Site'].strip()
     assert len(meta['Site']) == 6, 'Invalid site name'
     for float_field in ['Lat', 'Lon', 'Alt']:
         meta[float_field] = float(meta[float_field])

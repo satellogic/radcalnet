@@ -43,6 +43,7 @@ def test_basic():
     # for high enough wavelength, toa is smaller than sr
     assert np.all((avg_toa < avg_sr)[-30:])
 
+
 def test_ops():
     pathlist = glob.glob(os.path.join(store_path, 'BTCN', '*'))
     sm = SiteMeasurements.from_pathlist(pathlist)
@@ -67,6 +68,6 @@ def test_ops():
     sm3 = sm1[cut_time:]
     assert np.all((sm2 + sm3).weather['WV'].values == sm1.weather['WV'].values)
     # now with overlap
-    sm2 = sm1[:cut_time + dt.timedelta(hours = 2)]
+    sm2 = sm1[:cut_time + dt.timedelta(hours=2)]
     sm3 = sm1[cut_time:]
     assert np.all((sm2 + sm3).weather['T'].values == sm1.weather['T'].values)

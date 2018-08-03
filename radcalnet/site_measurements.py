@@ -78,9 +78,10 @@ class SiteMeasurements:
         Filenames are filtered to match a uniform site/instrument.
         (if not specified, site is taken from the first filename).
         """
-        assert len(paths) > 0, 'Must specify at least one data file'
-        if (instrument is not None):
+        if instrument is not None:
             meta = dict(site=instrument[:4], instrument=instrument)
+        elif len(paths) == 0:
+            meta = {}
         else:
             handle = DailyFileHandle(paths[0])
             meta = dict(
