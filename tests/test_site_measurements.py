@@ -71,3 +71,14 @@ def test_ops():
     sm2 = sm1[:cut_time + dt.timedelta(hours=2)]
     sm3 = sm1[cut_time:]
     assert np.all((sm2 + sm3).weather['T'].values == sm1.weather['T'].values)
+
+
+def test_plot():
+    pathlist = glob.glob(os.path.join(store_path, 'BTCN', '*'))
+    sm = SiteMeasurements.from_pathlist(pathlist)[dt.datetime(2018, 5, 28):dt.datetime(2018, 5, 29)]
+
+    # try various types of plots, make sure none fails:
+    for with_errors in [False, True]:
+        for measurements in ['toa', 'O3', ['O3', 'T']]:
+            spectrum = range(400, 430) if 'toa'in measurements else None
+            sm.plot(measurements, spectrum, with_errors=with_errors, show=False)
