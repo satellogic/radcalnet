@@ -1,11 +1,10 @@
 import itertools
-import matplotlib
-matplotlib.use('Agg', warn=False, force=False)
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from .daily_file import read_daily_file
 from .file_handle import DailyFileHandle
+plt.switch_backend('Agg')
 
 
 _srf_range = list(range(400, 2500+1, 10))
