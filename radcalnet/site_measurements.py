@@ -1,4 +1,6 @@
 import itertools
+import matplotlib
+matplotlib.use('Agg', warn=False, force=False)
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
