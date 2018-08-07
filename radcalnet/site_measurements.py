@@ -1,4 +1,5 @@
 import itertools
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from .daily_file import read_daily_file
@@ -11,6 +12,16 @@ _table_columns = dict(
     weather_errs=['P', 'T', 'WV', 'O3', 'AOD', 'Ang'],
     sr=_srf_range, sr_errs=_srf_range,
     toa=_srf_range, toa_errs=_srf_range
+)
+_names = dict(
+    sr='Surface Reflectance',
+    toa='Top Of Atmosphere Reflectance',
+    P='Surface atmospheric pressure in mb',
+    T='Surface temperature in Kelvin',
+    WV='Water Vapor in g/cm',
+    O3='Ozone column in Dobsons',
+    AOD='Aerosol Optical depth at 550 nm',
+    Ang='Aerosol Angstrom coefficient',
 )
 
 
@@ -140,3 +151,52 @@ class SiteMeasurements:
         toa_errs = _dataframe_merge(self.toa_errs, other.toa_errs)
         meta = dict(self.meta)
         return type(self)(weather, weather_errs, sr, sr_errs, toa, toa_errs, meta)
+
+    def plot(self, measurements, spectrum=None, with_errors=True, fig=None, show=True):
+        """
+        :param measurements: single or list, among: {'toa', 'sr', 'P', 'T', 'WV', 'O3', 'AOD', 'Ang'}
+        :param spectrum: if 'toa' or 'sr', specify wavelengths, e. g. [400, 600] or range(500,700)
+        :param with_errors: if True =- shows error bars
+        :param fig:
+        :param show: if True - draws plot
+        :return: plt figure
+        """
+        def _plot(data, err, with_errors, label):
+            if with_errors:
+                artists = plt.errorbar(data.index.values, data.values, yerr=err)
+                artists.lines[0].set_label(label)
+            else:
+                artists = plt.plot(data.index.values, data.values)
+                artists[0].set_label(label)
+
+        if fig is None:
+            fig = plt.figure()
+        if isinstance(measurements, str):
+            measurements = [measurements]
+        reflectance = 'toa' in measurements or 'sr' in measurements
+        for measurement in measurements:
+            if reflectance:
+                spectrum_values = [wv for wv in _srf_range if wv in spectrum]
+                for wv in spectrum_values:
+                    try:
+                        data = getattr(self, measurement)[wv]
+                        err = getattr(self, '%s_errs' % measurement)[wv]
+                        _plot(data, err, with_errors=with_errors, label='%s at %snm' % (measurement, wv))
+                    except KeyError:  # provided invalid parameter
+                        pass
+            else:
+                data = self.weather[measurement]
+                err = self.weather_errs[measurement]
+                _plot(data, err, with_errors=with_errors, label=_names[measurement])
+
+        fig.autofmt_xdate()
+        plt.title('%s in %s' % ('Reflectance' if reflectance else 'Weather', self.meta['site']))
+        plt.grid()
+        plt.legend(bbox_to_anchor=(1.04, 1), loc="upper left")
+        try:
+            plt.tight_layout()
+        except ValueError:  # https://github.com/matplotlib/matplotlib/issues/5456
+            pass
+        if show:
+            plt.show()
+        return fig
