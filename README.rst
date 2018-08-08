@@ -32,11 +32,15 @@ Pandas DataFrame_ objects ready for analysis.
                      :alt: Coverage Status
 
 Installation:
+-------------------
+
 
 ``pip install radcalnet``
 
 
 
 Usage:
+-------------------
+plot site measurements over time:
 
 .. image:: https://user-images.githubusercontent.com/17533233/43774947-9278c6e2-9a53-11e8-8b74-684904b8a4b7.png
