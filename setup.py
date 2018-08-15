@@ -14,9 +14,7 @@ setup(
     author='Slava Kerner, Amit Aronovitch',
     url='https://github.com/satellogic/radcalnet',
     author_email='amit@satellogic.com',
-    description="""\
-Python package for easy access to the measurements published by RadCalNet.org
-""",
+    description="Python package for easy access to the measurements published by RadCalNet.org",
     long_description=open('README.rst').read(),
     classifiers=[
         'Development Status :: 4 - Beta',
