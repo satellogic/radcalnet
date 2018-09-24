@@ -27,7 +27,7 @@ deploy:
           branch: master
           python: "3.6"
     - provider: pypi
-      distribution: "bdist_wheel"
+      distributions: "bdist_wheel"
       user: telluric
       password:
           secure: "sZ8xzdfqlRdHUehXy46MRXfc8Bg1jJ6//EgcMUTBsLBBfrPPF/rNs9ICTf7/yjZvCNa0jA9PWEBpzP1WNryzjZsjrBacjVo0CM0IthGLR//3/0w8u24v6LLmM80OOcw/gMh5wI+jnsgDK5Z862l84vncxsjPhc9v+bNMwLRAfb2c2jMaaQiNBoFk27vDm0m0pZMAX+cxsxGnyJ+EukMh4PEULo9UazREehb49cAvj453x5LAHPPCkznovgBaHi3rZWZf3B3IL62OnfPTcprjqYUzIrZjjgpCKFLj2bfAvypjtj/D+DP5taHQucytiMDc+kL1wPQGfp5Ncnf8ZRxzVTMSNDQIwui/LzAmNQnOURzaJI0nvKc97SwyvEP5vEFlihGAj0pd0Nyz9K1RMaMRSxg/SN+AzRMnRPYp6V5n71bkO25cyvsrGS9cUhc5WxKkvuO+Ya8j0x40EQjtRF3IiRV3hGOmuRBV+bcTsWR5rOjVGF/p7N51vp4pq590/jswpWjOYd+09NpkfW45ZccGdIV/uOHIOUiW6zLmX/tMPC5oBXQBUMV3pAJtOMq1o3sGoz6fA9R88hyHlyuJHyP5SHqeT49mElEQqkIw1SIfiDNTLAbEBU0qj14ylBxNsXi5Ypi1IHIRVmbeFi+OhmoJEgmsRgC7UhEA/SV21ExsjDQ="
